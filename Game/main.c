@@ -45,7 +45,6 @@ typedef enum State
 
 typedef struct Sprite
 {
-	sfTexture* spriteTexture;
 	sfSprite* sprite;
 	sfVector2f direction;
 	State state;
@@ -56,7 +55,8 @@ struct EssentialData
 {
 	sfRenderWindow* renderWindow;
 	sfClock* clock;
-
+	sfTexture* spriteTexture;
+	
 	Sprite background;
 	Sprite duck;
 	Sprite crosshair;
@@ -84,6 +84,7 @@ int main(void)
 	}
 	// Cleanup
 	Cleanup(&data);
+	system("pause");
 	return EXIT_SUCCESS;
 }
 
@@ -97,17 +98,19 @@ void Load(struct EssentialData* _data)
 	_data-> clock = sfClock_create();
 	_data->roundTime = 0;
 	_data->score = 0;
+	_data->spriteTexture = sfTexture_createFromFile("Assets/Sprites/DuckHunt-SpriteSheet.png", NULL);
 
 	_data->background.sprite = sfSprite_create();
-	_data->background.spriteTexture = sfTexture_createFromFile("Assets/Sprites/DuckHunt-SpriteSheet.png", &(sfIntRect){ 1532, 20, SCREEN_WIDTH, SCREEN_HEIGHT });
-	sfSprite_setTexture(_data->background.sprite, _data->background.spriteTexture, 0);
+	sfSprite_setTexture(_data->background.sprite, _data->spriteTexture, 0);
+	sfSprite_setTextureRect(_data->background.sprite, (sfIntRect){ 1532, 20, SCREEN_WIDTH, SCREEN_HEIGHT});
 
 	_data->crosshair.sprite = sfSprite_create();
-	_data->crosshair.spriteTexture = sfTexture_createFromFile("Assets/Sprites/DuckHunt-SpriteSheet.png", &(sfIntRect){ 1876, 1036, 100 , 92 });
-	sfSprite_setTexture(_data->crosshair.sprite, _data->crosshair.spriteTexture, 0);
+	sfSprite_setTexture(_data->crosshair.sprite, _data->spriteTexture, 0);
+	sfSprite_setTextureRect(_data->crosshair.sprite, (sfIntRect) {1876, 1036, 100, 92});
 	sfSprite_setOrigin(_data->crosshair.sprite, (sfVector2f) { 50 , 46 });
 
 	_data->duck.sprite = sfSprite_create();
+	sfSprite_setTexture(_data->duck.sprite, _data->spriteTexture, 0);
 
 	RoundStart(_data);
 }
@@ -156,6 +159,10 @@ void MouseButtonPressed(struct EssentialData* _data)
 			_data->duck.direction.y = 1;
 			_data->duck.state = FALLING;
 			_data->score += 500;
+			sfSprite_setTextureRect(_data->duck.sprite, (sfIntRect){ 1412, 536, 65, 132});
+			sfSprite_setOrigin(_data->duck.sprite, (sfVector2f) { 32, 66});
+			sfSprite_setScale(_data->duck.sprite, (sfVector2f) {1,1});
+
 			printf("You hit! Your score is now %d\n", _data->score);
 		}
 	}
@@ -193,7 +200,9 @@ void Update(struct EssentialData* _data)
 		_data->duck.state = FLEEING;
 		_data->duck.direction.x = 1;
 		_data->duck.direction.y = -1;
-		sfSprite_setScale(_data->duck.sprite, (sfVector2f) {1, 1 });
+		sfSprite_setTextureRect(_data->duck.sprite, (sfIntRect) { 548, 504, 116, 148 });
+		sfSprite_setOrigin(_data->duck.sprite, (sfVector2f) { 32, 66 });
+		sfSprite_setScale(_data->duck.sprite, (sfVector2f) { 1, 1 });
 	}
 
 	if (sfKeyboard_isKeyPressed(sfKeyZ))
@@ -220,8 +229,11 @@ void Cleanup(struct EssentialData* _data)
 {
 	sfRenderWindow_destroy(_data->renderWindow);
 	sfClock_destroy(_data->clock);
-	_data->renderWindow = NULL;
+	_data->renderWindow = NULL;	
 	_data->clock = NULL;
+
+	system("cls");
+	printf("Your end score was %d\n", _data->score);
 
 	sfSprite_destroy(_data->background.sprite);
 	sfSprite_destroy(_data->crosshair.sprite);
@@ -240,8 +252,7 @@ void RoundStart(struct EssentialData* _data)
 	int tempRand = rand();
 	sfSprite_setPosition(_data->duck.sprite, (sfVector2f) { ((SCREEN_WIDTH) * (tempRand % 2)), SCREEN_HEIGHT / 2 });
 	_data->duck.direction = GetVectorDirection((tempRand % (MAX_ANGLE * 2) - 20) + (-180 * (tempRand % 2)));
-	_data->duck.spriteTexture = sfTexture_createFromFile("Assets/Sprites/DuckHunt-SpriteSheet.png", &(sfIntRect){ 32, 508, 140, 136});
-	sfSprite_setTexture(_data->duck.sprite, _data->duck.spriteTexture, 0);
+	sfSprite_setTextureRect(_data->duck.sprite, (sfIntRect) { 32, 508, 140, 136 });
 	sfSprite_setOrigin(_data->duck.sprite, (sfVector2f) { 70, 68 });
 	int temporaire = pow(-1, tempRand % 2);
 	sfSprite_setScale(_data->duck.sprite, (sfVector2f) {temporaire, 1 });
@@ -279,7 +290,6 @@ void CheckCollisionDuckScreen(struct EssentialData* _data)
 	// Collision à gauche de l'écran
 	if (hitbox.left < 0 && _data->duck.state == FLYING && _data->duck.direction.x < 0)
 	{
-		printf("J'ai touché le mur gauche\n");
 		sfVector2f position = sfSprite_getPosition(_data->duck.sprite);
 		position.x = hitbox.width / 2;
 		sfSprite_setPosition(_data->duck.sprite, position);
@@ -289,7 +299,6 @@ void CheckCollisionDuckScreen(struct EssentialData* _data)
 	// Collision à droite de l'écran
 	else if (hitbox.left + hitbox.width > SCREEN_WIDTH && _data->duck.state == FLYING && _data->duck.direction.x > 0)
 	{
-		printf("J'ai touché le mur droit\n");
 		sfVector2f position = sfSprite_getPosition(_data->duck.sprite);
 		position.x = SCREEN_WIDTH - hitbox.width / 2;
 		sfSprite_setPosition(_data->duck.sprite, position);
