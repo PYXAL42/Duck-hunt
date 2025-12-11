@@ -56,6 +56,12 @@ struct EssentialData
 	sfRenderWindow* renderWindow;
 	sfClock* clock;
 	sfTexture* spriteTexture;
+
+	sfSoundBuffer* duckFallSoundBuffer;
+	sfSound* duckFallSound;
+
+	sfSoundBuffer* gunshotSoundBuffer;
+	sfSound* gunshotSound;
 	
 	Sprite background;
 	Sprite duck;
@@ -112,6 +118,13 @@ void Load(struct EssentialData* _data)
 	_data->duck.sprite = sfSprite_create();
 	sfSprite_setTexture(_data->duck.sprite, _data->spriteTexture, 0);
 
+	_data->duckFallSoundBuffer = sfSoundBuffer_createFromFile("Assets/Sounds/DeadDuckFalls.ogg");
+	_data->duckFallSound = sfSound_create();
+	sfSound_setBuffer(_data->duckFallSound, _data->duckFallSoundBuffer);
+	_data->gunshotSoundBuffer = sfSoundBuffer_createFromFile("Assets/Sounds/Gunshot.ogg");
+	_data->gunshotSound = sfSound_create();
+	sfSound_setBuffer(_data->gunshotSound, _data->gunshotSoundBuffer);
+
 	RoundStart(_data);
 }
 
@@ -152,6 +165,7 @@ void MouseButtonPressed(struct EssentialData* _data)
 	{
 		_data->ammo -= 1;
 		printf("BANG!!\n");
+		sfSound_play(_data->gunshotSound);
 		printf("%d bullets still in the chamber\n", _data->ammo);
 		if (GetMouseColision(_data) && _data->duck.state == FLYING)
 		{
@@ -162,6 +176,7 @@ void MouseButtonPressed(struct EssentialData* _data)
 			sfSprite_setTextureRect(_data->duck.sprite, (sfIntRect){ 1412, 536, 65, 132});
 			sfSprite_setOrigin(_data->duck.sprite, (sfVector2f) { 32, 66});
 			sfSprite_setScale(_data->duck.sprite, (sfVector2f) {1,1});
+			sfSound_play(_data->duckFallSound);
 
 			printf("You hit! Your score is now %d\n", _data->score);
 		}
@@ -331,6 +346,7 @@ void CheckCollisionDuckScreen(struct EssentialData* _data)
 			_data->duck.direction.y = 0;
 			_data->duck.direction.x = 0;
 			_data->duck.state = DEAD;
+			sfSound_stop(_data->duckFallSound);
 			break;
 		}
 	}

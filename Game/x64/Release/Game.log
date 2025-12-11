@@ -1,5 +1,10 @@
-﻿  Génération de code en cours
-  0 of 19 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+﻿  main.c
+D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(261,74): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(262,79): warning C4244: 'fonction' : conversion de 'int' en 'float', perte possible de données
+D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(266,54): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(265,19): warning C4244: 'initialisation' : conversion de 'double' en 'int', perte possible de données
+  Génération de code en cours
+  2 of 19 functions (10.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Fin de la génération du code

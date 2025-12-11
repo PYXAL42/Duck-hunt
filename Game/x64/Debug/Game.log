@@ -1,6 +1,6 @@
 ﻿  main.c
-D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(253,74): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
-D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(254,79): warning C4244: 'fonction' : conversion de 'int' en 'float', perte possible de données
-D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(258,54): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
-D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(257,19): warning C4244: 'initialisation' : conversion de 'double' en 'int', perte possible de données
+D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(268,74): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(269,79): warning C4244: 'fonction' : conversion de 'int' en 'float', perte possible de données
+D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(273,54): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+D:\SVN\Eleves\amasson\Duck-hunt\Game\main.c(272,19): warning C4244: 'initialisation' : conversion de 'double' en 'int', perte possible de données
   Game.vcxproj -> D:\SVN\Eleves\amasson\Duck-hunt\x64\Debug\Game.exe
